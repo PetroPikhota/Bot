@@ -2,6 +2,8 @@
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot;
+using Bot_start.Interface;
+using Bot_start.Controlers;
 
 namespace Bot_start
 {
@@ -9,9 +11,14 @@ namespace Bot_start
     public class BotMain
     {
         private static TelegramBotClient botClient;
+        private List<IMessage> messages;
         public BotMain()
         {
             botClient = new TelegramBotClient("YOUR_BOT_TOKEN");
+            messages = new List<IMessage>
+            {
+                new HelloMessage()
+            };
         }
         public async Task StartReceiver()
         {
@@ -25,7 +32,15 @@ namespace Bot_start
         {
             if (update.Message is Message message)
             {
-                await botClient.SendTextMessageAsync(message.Chat.Id, "Hello Bro");
+                IMessage msg = messages.FirstOrDefault(x => x.getMessage() == message.Text);
+                if (msg != null)
+                {
+                    await msg.PerformAction(botClient, update);
+                }
+                else
+                {
+                    await botClient.SendTextMessageAsync(message.Chat.Id, "Hello Bro");
+                }
             }
         }
 
