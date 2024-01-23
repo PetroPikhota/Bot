@@ -19,7 +19,8 @@ namespace Bot_start
             messages = new List<IMessage>
             {
                 new HelloMessage(),
-                new UpdateImagesMessage()
+                new UpdateImagesMessage(),
+                new SendPictureMessage()
             };
         }
         public async Task StartReceiver()
