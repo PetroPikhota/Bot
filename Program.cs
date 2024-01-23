@@ -4,6 +4,7 @@ class Program
 {
     static async Task Main()
     {       
+        PrapereConfig();
         BotMain botMain = new BotMain();
         await botMain.StartReceiver();
     }
