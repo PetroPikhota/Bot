@@ -4,6 +4,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot;
 using Bot_start.Interface;
 using Bot_start.Controlers;
+using Bot_start.Controlers.Messages;
 
 namespace Bot_start
 {
@@ -17,7 +18,8 @@ namespace Bot_start
             botClient = new TelegramBotClient(LoginParameters.GetTelegram().botToken);
             messages = new List<IMessage>
             {
-                new HelloMessage()
+                new HelloMessage(),
+                new UpdateImagesMessage()
             };
         }
         public async Task StartReceiver()
@@ -39,7 +41,7 @@ namespace Bot_start
                 }
                 else
                 {
-                    await botClient.SendTextMessageAsync(message.Chat.Id, "Hello Bro");
+                    await botClient.SendTextMessageAsync(message.Chat.Id, "Unknown message");
                 }
             }
         }
