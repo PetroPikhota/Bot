@@ -35,7 +35,7 @@ namespace Bot_start.Controlers
                     LoginDataModel loginDataModel = JsonConvert.DeserializeObject<LoginDataModel>(jsonData);
                     if (loginDataModel != null)
                     {
-                        _telegram = loginDataModel.Teelgram;
+                        _telegram = loginDataModel.Telegram;
                         _reddit = loginDataModel.Reddit;
                     }
                     else

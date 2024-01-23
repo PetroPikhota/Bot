@@ -3,7 +3,7 @@
     public class LoginDataModel
     {
         public RedditModel Reddit { get; set; }
-        public TelegramModel Teelgram { get; set; }
+        public TelegramModel Telegram { get; set; }
     }
     public class RedditModel
     {
