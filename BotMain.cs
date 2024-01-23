@@ -14,7 +14,7 @@ namespace Bot_start
         private List<IMessage> messages;
         public BotMain()
         {
-            botClient = new TelegramBotClient("YOUR_BOT_TOKEN");
+            botClient = new TelegramBotClient(LoginParameters.GetTelegram().botToken);
             messages = new List<IMessage>
             {
                 new HelloMessage()

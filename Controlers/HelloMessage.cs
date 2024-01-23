@@ -6,7 +6,7 @@ namespace Bot_start.Controlers
 {
     public class HelloMessage : IMessage
     {
-        private string _message=@"\hello";
+        private string _message="/hello";
         public string getMessage()
         {
             return _message;
