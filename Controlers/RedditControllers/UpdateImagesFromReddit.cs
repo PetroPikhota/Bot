@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Bot_start.Models;
+using Newtonsoft.Json;
 
 namespace Bot_start.Controlers.RedditControllers
 {
@@ -9,6 +10,7 @@ namespace Bot_start.Controlers.RedditControllers
         readonly string userAgent;
         readonly string subredditName = "memes";
         int postCount = 10;
+        List<Item> items=new List<Item>();
 
         public UpdateImagesFromReddit()
         {
@@ -27,6 +29,7 @@ namespace Bot_start.Controlers.RedditControllers
                 List<RedditPost> posts = GetRedditPosts(subredditName, postCount, userAgent, accessToken).Result;
 
                 DownloadAndSaveImages(posts);
+                AddDataToDb();
             }
             catch (Exception ex)
             {
@@ -85,9 +88,15 @@ namespace Bot_start.Controlers.RedditControllers
 
                 string fileName = $"images/{postId}.jpg";
                 File.WriteAllBytes(fileName, imageBytes);
-
+                items.Add(new Item(postId));
                 Console.WriteLine($"Image saved: {fileName}");
             }
+        }
+
+        async Task AddDataToDb()
+        {
+            DbController.DB.Items.AddRange(items);
+            await DbController.DB.SaveChangesAsync();
         }
     }
 

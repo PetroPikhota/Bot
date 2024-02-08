@@ -7,7 +7,8 @@ namespace Bot_start.Controlers
     public static class LoginParameters
     {
         private static TelegramModel _telegram = null;
-        private static RedditModel _reddit = null; 
+        private static RedditModel _reddit = null;
+        private static string _connectionString = null;
         public static TelegramModel GetTelegram()
         {
             if( _telegram == null)
@@ -25,6 +26,15 @@ namespace Bot_start.Controlers
             }
             return _reddit;
         }
+
+        public static string GetConnectioString()
+        {
+            if( _connectionString == null)
+            {
+                GetJsonParameters();
+            }
+            return _connectionString;
+        }
         private static void GetJsonParameters()
         {
             string jsonData = getLoginJson();
@@ -37,6 +47,7 @@ namespace Bot_start.Controlers
                     {
                         _telegram = loginDataModel.Telegram;
                         _reddit = loginDataModel.Reddit;
+                        _connectionString = loginDataModel.connectionStrings.WebApiDatabase;
                     }
                     else
                     {

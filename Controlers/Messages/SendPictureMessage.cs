@@ -1,4 +1,5 @@
 ﻿using Bot_start.Interface;
+using Bot_start.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -25,6 +26,7 @@ namespace Bot_start.Controlers.Messages
                            photo: new InputFileStream(stream)
                        );
                     }
+                    saveSentDataForUser(message.Chat.Id, path);
                 }
             }
             else
@@ -44,6 +46,13 @@ namespace Bot_start.Controlers.Messages
                 return true;
             }
             return false;
+        }
+
+        private void saveSentDataForUser(long chatId, string path)
+        {
+            SentItem sentItem = new SentItem() { Id=chatId, ItemName=path };
+            DbController.DB.SentItems.Add(sentItem);
+            DbController.DB.SaveChanges();
         }
     }
 }

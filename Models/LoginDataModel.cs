@@ -4,6 +4,7 @@
     {
         public RedditModel Reddit { get; set; }
         public TelegramModel Telegram { get; set; }
+        public ConnectionStrings connectionStrings { get; set; }
     }
     public class RedditModel
     {
@@ -15,5 +16,10 @@
     public class TelegramModel
     {
         public string botToken { get; set; }
+    }
+
+    public class ConnectionStrings
+    {
+        public string WebApiDatabase { get; set; }
     }
 }

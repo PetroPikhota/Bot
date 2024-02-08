@@ -1,4 +1,5 @@
 using Bot_start;
+using Bot_start.Controlers;
 
 class Program
 {
@@ -15,5 +16,7 @@ class Program
         {
             DirectoryInfo di = Directory.CreateDirectory("./images");
         }
+
+        DbController _db = new DbController();       
     }
 }
