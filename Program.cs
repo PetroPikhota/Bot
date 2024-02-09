@@ -17,6 +17,6 @@ class Program
             DirectoryInfo di = Directory.CreateDirectory("./images");
         }
 
-        DbController _db = new DbController();       
+        DbController _db = new DbController();
     }
 }

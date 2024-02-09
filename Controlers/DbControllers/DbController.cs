@@ -1,14 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿
 namespace Bot_start.Controlers
 {
     public class DbController
     {
-        public static AppDbContext DB = null;
+        private static AppDbContext _DB = null;
         public DbController()
         {
-            IConfiguration configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
-            DB = new AppDbContext(configuration);
+            if (_DB == null)
+            {
+                IConfiguration configuration = new ConfigurationBuilder().AddEnvironmentVariables().Build();
+                _DB = new AppDbContext(configuration);
+            }
         }
+
+        public AppDbContext GetDb()
+        {
+            return _DB;
+        }
+
     }
 }

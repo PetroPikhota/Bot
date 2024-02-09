@@ -11,6 +11,7 @@ namespace Bot_start
 
     public class BotMain
     {
+        readonly IPrivateLogger _logger = MyLogger.GetLogger();
         private static TelegramBotClient botClient;
         private List<IMessage> messages;
         public BotMain()
@@ -43,6 +44,7 @@ namespace Bot_start
                 else
                 {
                     await botClient.SendTextMessageAsync(message.Chat.Id, "Unknown message");
+                    _logger.LOG($"Unknown message: {message.Text}");
                 }
             }
         }
@@ -52,6 +54,7 @@ namespace Bot_start
             if (ex is ApiRequestEventArgs)
             {
                 await botClient.SendTextMessageAsync("", "there is some Error bro");
+                _logger.LOG(ex.Message);
             }
         }
     }

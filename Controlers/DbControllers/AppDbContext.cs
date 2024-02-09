@@ -1,6 +1,5 @@
 ﻿using Bot_start.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Bot_start.Controlers
 {

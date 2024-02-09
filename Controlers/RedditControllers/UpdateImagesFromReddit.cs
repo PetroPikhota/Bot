@@ -1,10 +1,12 @@
-﻿using Bot_start.Models;
+﻿using Bot_start.Interface;
+using Bot_start.Models;
 using Newtonsoft.Json;
 
 namespace Bot_start.Controlers.RedditControllers
 {
     public class UpdateImagesFromReddit
     {
+        IPrivateLogger _logger = MyLogger.GetLogger();
         readonly string clientId;
         readonly string clientSecret;
         readonly string userAgent;
@@ -95,8 +97,21 @@ namespace Bot_start.Controlers.RedditControllers
 
         async Task AddDataToDb()
         {
-            DbController.DB.Items.AddRange(items);
-            await DbController.DB.SaveChangesAsync();
+            try
+            {
+                DbController dbController = new DbController();
+                var DB = dbController.GetDb();
+                items.RemoveAll(DB.Items.ToList().Contains);
+                if (items.Count > 0)
+                {
+                    DB.Items.AddRange(items);
+                    DB.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LOG($"{nameof(UpdateImagesFromReddit)}: {ex.Message}");
+            }
         }
     }
 

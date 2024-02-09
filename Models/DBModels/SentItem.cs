@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bot_start.Models
 {
     public class SentItem
     {
-        [Key]
-        public long Id { get; set; }
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity), Key()]
+        public int Id { get;set; }
+        public long ChatId { get; set; }
         public string ItemName { get; set; }
     }
 }

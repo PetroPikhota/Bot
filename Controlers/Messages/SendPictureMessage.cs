@@ -7,6 +7,7 @@ namespace Bot_start.Controlers.Messages
 {
     public class SendPictureMessage : IMessage
     {
+        IPrivateLogger _logger = MyLogger.GetLogger();
         private string _message = "/givememem";
         public string getMessage()
         {
@@ -50,9 +51,17 @@ namespace Bot_start.Controlers.Messages
 
         private void saveSentDataForUser(long chatId, string path)
         {
-            SentItem sentItem = new SentItem() { Id=chatId, ItemName=path };
-            DbController.DB.SentItems.Add(sentItem);
-            DbController.DB.SaveChanges();
+            try
+            {
+                SentItem sentItem = new SentItem() { ChatId = chatId, ItemName = path };
+                DbController dbController = new DbController();
+                AppDbContext DB = dbController.GetDb();
+                DB.SentItems.Add(sentItem);
+                DB.SaveChanges();
+            }catch(Exception ex)
+            {
+                _logger.LOG($"{nameof(saveSentDataForUser)}: {ex.Message}");
+            }
         }
     }
 }
