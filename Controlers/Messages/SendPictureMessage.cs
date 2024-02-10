@@ -55,15 +55,22 @@ namespace Bot_start.Controlers.Messages
         bool tryToGetPictureFromDb(out string path)
         {
             path = null;
-            if (dbController.Items.Count() > 0)
-            {
-                Random rnd = new Random();
-                Item item = dbController.Items.FirstOrDefault(x => x.Id == rnd.Next(dbController.Items.Count() - 1));
-                if (item != null)
+            try
+            {              
+                if (dbController.Items.Count() > 0)
                 {
-                    path = item.Path;
-                    return true;
+                    Random rnd = new Random();
+                    Item item = dbController.Items.FirstOrDefault(x => x.Id == rnd.Next(dbController.Items.Count() - 1));
+                    if (item != null)
+                    {
+                        path = item.Path;
+                        return true;
+                    }
                 }
+            }catch(Exception ex)
+            {
+                _logger.LOG($"{nameof(tryToGetPictureFromDb)}: {ex.Message}");
+
             }
             return false;
         }
