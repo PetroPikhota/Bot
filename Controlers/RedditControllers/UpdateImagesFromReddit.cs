@@ -32,7 +32,6 @@ namespace Bot_start.Controlers.RedditControllers
                 List<RedditPost> posts = GetRedditPosts(subredditName, postCount, userAgent, accessToken).Result;
 
                 DownloadAndSaveImages(posts);
-                AddDataToDb();
             }
             catch (Exception ex)
             {
@@ -80,8 +79,11 @@ namespace Bot_start.Controlers.RedditControllers
                 if (post.Url.EndsWith(".jpg") || post.Url.EndsWith(".jpeg"))
                 {
                     await DownloadAndSaveImage(post.Url, post.Id);
+                    items.Add(new Item() { Path = post.Url });
                 }
+               
             }
+            await AddDataToDb();
         }
         async Task DownloadAndSaveImage(string imageUrl, string postId)
         {
@@ -93,8 +95,7 @@ namespace Bot_start.Controlers.RedditControllers
                 string shorFileName = regex.Match(imageUrl).Value.Split('.')[0];
                 string fileName = $"images/{shorFileName}.jpg";
                 File.WriteAllBytes(fileName, imageBytes);
-                _logger.LOG($"Saved: {imageUrl}");
-                items.Add(new Item() { Path = imageUrl });
+                _logger.LOG($"Saved: {imageUrl}");              
             }
         }
 
