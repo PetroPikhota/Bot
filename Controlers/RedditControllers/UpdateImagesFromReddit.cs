@@ -90,8 +90,7 @@ namespace Bot_start.Controlers.RedditControllers
 
                 string fileName = $"images/{postId}.jpg";
                 File.WriteAllBytes(fileName, imageBytes);
-                items.Add(new Item(postId));
-                Console.WriteLine($"Image saved: {fileName}");
+                items.Add(new Item(fileName));
             }
         }
 
@@ -101,9 +100,9 @@ namespace Bot_start.Controlers.RedditControllers
             {
                 DbController dbController = new DbController();
                 var DB = dbController.GetDb();
-                _logger.LOG($"Before Erasing duplicated {String.Join(" : ", items)}");
+                _logger.LOG($"Before Erasing duplicated {String.Join(" : ", items.Select(x=>x.Path))}");
                 items.RemoveAll(DB.Items.ToList().Contains);
-                _logger.LOG($"After Erasing duplicated {String.Join(" : ", items)}");
+                _logger.LOG($"After Erasing duplicated {String.Join(" : ", items.Select(x => x.Path))}");
 
                 if (items.Count > 0)
                 {
