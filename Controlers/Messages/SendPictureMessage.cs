@@ -56,11 +56,13 @@ namespace Bot_start.Controlers.Messages
         {
             path = null;
             try
-            {              
-                if (dbController.Items.Count() > 0)
+            {
+                int itemsCount = dbController.Items.Count();
+                if (itemsCount > 0)
                 {
                     Random rnd = new Random();
-                    Item item = dbController.Items.FirstOrDefault(x => x.Id == rnd.Next(dbController.Items.Count() - 1));
+                    int elementNumber=rnd.Next(itemsCount-1);
+                    Item item = dbController.Items.ToList().FirstOrDefault(x => x.Id == elementNumber);
                     if (item != null)
                     {
                         path = item.Path;
