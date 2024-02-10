@@ -64,7 +64,7 @@ namespace Bot_start.Controlers.Messages
                 {
                     Random rnd = new Random();
                     int elementNumber=rnd.Next(itemsCount-1);
-                    string item = items.FirstOrDefault(x => x.Id == elementNumber);
+                    string item = items[elementNumber];
                     if (item != null)
                     {
                         path = item;
