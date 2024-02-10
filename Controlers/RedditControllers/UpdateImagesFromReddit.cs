@@ -101,6 +101,7 @@ namespace Bot_start.Controlers.RedditControllers
 
         async Task AddDataToDb()
         {
+            _logger.LOG("Start AddDataToDb");
             try
             {
                 DbController dbController = new DbController();
