@@ -101,7 +101,10 @@ namespace Bot_start.Controlers.RedditControllers
             {
                 DbController dbController = new DbController();
                 var DB = dbController.GetDb();
+                _logger.LOG($"Before Erasing duplicated {String.Join(" : ", items)}");
                 items.RemoveAll(DB.Items.ToList().Contains);
+                _logger.LOG($"After Erasing duplicated {String.Join(" : ", items)}");
+
                 if (items.Count > 0)
                 {
                     DB.Items.AddRange(items);
