@@ -7,6 +7,10 @@ namespace Bot_start.Controlers
     {
         public static IPrivateLogger GetLogger()
         {
+            if (!Directory.Exists("./Log"))
+            {
+                DirectoryInfo di = Directory.CreateDirectory("./Log");
+            }
             return new FileLogger();
         }
     }
