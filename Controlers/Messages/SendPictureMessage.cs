@@ -1,5 +1,6 @@
 ﻿using Bot_start.Interface;
 using Bot_start.Models;
+using System.IO;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -13,20 +14,22 @@ namespace Bot_start.Controlers.Messages
         {
             return _message;
         }
-
+        AppDbContext dbController = new DbController().GetDb();
         public async Task PerformAction(ITelegramBotClient botClient, Update update)
         {
-            if (tryToSelectPicture(out string path))
+            if (tryToGetPictureFromDb(out string path))
             {
                 if (update.Message is Message message)
                 {
+                    /*
                     using (Stream stream = System.IO.File.OpenRead(path))
                     {
                         await botClient.SendPhotoAsync(
                            chatId: message.Chat.Id,
                            photo: new InputFileStream(stream)
                        );
-                    }
+                    }*/
+                    await botClient.SendPhotoAsync(message.Chat.Id, InputFileUrl.FromUri(path));
                     saveSentDataForUser(message.Chat.Id, path);
                 }
             }
@@ -49,15 +52,30 @@ namespace Bot_start.Controlers.Messages
             return false;
         }
 
+        bool tryToGetPictureFromDb(out string path)
+        {
+            path = null;
+            if (dbController.Items.Count() > 0)
+            {
+                Random rnd = new Random();
+                Item item = dbController.Items.FirstOrDefault(x => x.Id == rnd.Next(dbController.Items.Count() - 1));
+                if (item != null)
+                {
+                    path = item.Path;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void saveSentDataForUser(long chatId, string path)
         {
             try
             {
                 SentItem sentItem = new SentItem() { ChatId = chatId, ItemName = path };
-                DbController dbController = new DbController();
-                AppDbContext DB = dbController.GetDb();
-                DB.SentItems.Add(sentItem);
-                DB.SaveChanges();
+
+                dbController.SentItems.Add(sentItem);
+                dbController.SaveChanges();
             }catch(Exception ex)
             {
                 _logger.LOG($"{nameof(saveSentDataForUser)}: {ex.Message}");

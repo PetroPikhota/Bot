@@ -1,6 +1,7 @@
 ﻿using Bot_start.Interface;
 using Bot_start.Models;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace Bot_start.Controlers.RedditControllers
 {
@@ -87,8 +88,9 @@ namespace Bot_start.Controlers.RedditControllers
             using (HttpClient httpClient = new HttpClient())
             {
                 byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
-
-                string fileName = $"images/{postId}.jpg";
+                Regex regex = new Regex("([a-zA-Z0-9]+)\\.(jpeg|jpg)(?=$|\\?)");
+                string shorFileName = regex.Match(imageUrl).Value.Split('.')[0];
+                string fileName = $"images/{shorFileName}.jpg";
                 File.WriteAllBytes(fileName, imageBytes);
                 items.Add(new Item(imageUrl));
             }
