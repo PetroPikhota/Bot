@@ -90,7 +90,7 @@ namespace Bot_start.Controlers.RedditControllers
 
                 string fileName = $"images/{postId}.jpg";
                 File.WriteAllBytes(fileName, imageBytes);
-                items.Add(new Item(fileName));
+                items.Add(new Item(imageUrl));
             }
         }
 
