@@ -88,11 +88,13 @@ namespace Bot_start.Controlers.RedditControllers
             using (HttpClient httpClient = new HttpClient())
             {
                 byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
+
                 Regex regex = new Regex("([a-zA-Z0-9]+)\\.(jpeg|jpg)(?=$|\\?)");
                 string shorFileName = regex.Match(imageUrl).Value.Split('.')[0];
                 string fileName = $"images/{shorFileName}.jpg";
                 File.WriteAllBytes(fileName, imageBytes);
-                items.Add(new Item(imageUrl));
+                _logger.LOG($"Saved: {imageUrl}");
+                items.Add(new Item() { Path = imageUrl });
             }
         }
 

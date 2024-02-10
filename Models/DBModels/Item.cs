@@ -12,5 +12,6 @@ namespace Bot_start.Models
         {
             Path = path;
         }
+        public Item() { }
     }
 }
