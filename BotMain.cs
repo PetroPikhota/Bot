@@ -36,6 +36,7 @@ namespace Bot_start
         {
             if (update.Message is Message message)
             {
+                _logger.LOG_Message(message.Text);
                 IMessage msg = messages.FirstOrDefault(x => x.getMessage() == message.Text);
                 if (msg != null)
                 {
