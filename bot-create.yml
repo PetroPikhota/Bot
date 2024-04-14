@@ -1,0 +1,9 @@
+version: '3'
+services:
+  net_bot:
+    build: .
+  bot:
+    image: net_bot
+    ports:
+      - 80:80
+  
