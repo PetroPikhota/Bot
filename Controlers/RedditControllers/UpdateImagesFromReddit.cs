@@ -27,8 +27,9 @@ namespace Bot_start.Controlers.RedditControllers
             bool result = true;
             try
             {
+                _logger.LOG($"Start {nameof(UpdateImages)} Class");
                 string accessToken = GetAccessToken(clientId, clientSecret, userAgent);
-
+                _logger.LOG($"{nameof(UpdateImages)} After GetAccessToken");
                 List<RedditPost> posts = GetRedditPosts(subredditName, postCount, userAgent, accessToken).Result;
                 i = posts.Count;
                 _ = DownloadAndSaveImages(posts);
@@ -114,7 +115,9 @@ namespace Bot_start.Controlers.RedditControllers
             {
                 DbController dbController = new();
                 AppDbContext DB = dbController.GetDb();
+                _logger.LOG($"before remove items.Count = {items.Count}");
                 _ = items.RemoveAll(DB.Items.ToList().Contains);
+                _logger.LOG($"after remove items.Count = {items.Count}");
                 if (items.Count > 0)
                 {
                     DB.Items.AddRange(items);

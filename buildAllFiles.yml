@@ -11,3 +11,5 @@ services:
     build: .
     ports:
       - 80:80
+    volumes:
+      - /home/petryk/Desktop/NET/Bot/Log:./app/Log
