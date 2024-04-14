@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bot_start.Models
 {
-    public class Item
+    public class Item : CoreDbModels
     {
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity), Key()]
         public int Id { get; set; }
@@ -12,6 +12,9 @@ namespace Bot_start.Models
         {
             Path = path;
         }
-        public Item() { }
+        public Item()
+        {
+            lastUpdate = DateTime.Now;
+        }
     }
 }
