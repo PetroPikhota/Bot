@@ -22,7 +22,7 @@ namespace Bot_start.Controlers.RedditControllers
             userAgent = LoginParameters.GetReddit().userAgent;
         }
 
-        public bool UpdateImages()
+        public bool UpdateImages(ref int i)
         {
             bool result = true;
             try
@@ -30,8 +30,9 @@ namespace Bot_start.Controlers.RedditControllers
                 string accessToken = GetAccessToken(clientId, clientSecret, userAgent).Result;
 
                 List<RedditPost> posts = GetRedditPosts(subredditName, postCount, userAgent, accessToken).Result;
-
+                i = posts.Count;
                 DownloadAndSaveImages(posts);
+                
             }
             catch (Exception ex)
             {

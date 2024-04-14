@@ -16,9 +16,10 @@ namespace Bot_start.Controlers.Messages
         public async Task PerformAction(ITelegramBotClient botClient, Update update)
         {
             UpdateImagesFromReddit updateImages = new UpdateImagesFromReddit();
-            if (updateImages.UpdateImages())
+            int i = -1;
+            if (updateImages.UpdateImages(ref i))
             {
-                await SendMessage(botClient, update, "Succesfully updated");
+                await SendMessage(botClient, update, $"Succesfully updated. Added {i} records");
             }
             else
             {
