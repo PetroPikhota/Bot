@@ -1,9 +1,9 @@
-version: '3'
+version: '3.9'
 services:
   postgres-container:
-    image: 'arm64v8/postgres'
+    image: arm64v8/postgres
     ports:
       - 5432:5432  
     enviroment:
-      - POSTGRES_PASSWORD: 'e10adc3949ba59abbe56e057f20f883e'
-      - POSTGRES_USER: 'postgres'
+      - POSTGRES_PASSWORD: e10adc3949ba59abbe56e057f20f883e
+      - POSTGRES_USER: postgres
