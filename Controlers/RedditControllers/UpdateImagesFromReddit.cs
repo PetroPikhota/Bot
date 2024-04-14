@@ -131,7 +131,7 @@ namespace Bot_start.Controlers.RedditControllers
                 _logger.LOG($"{nameof(UpdateImagesFromReddit)}: {ex.Message}");
                 if(ex.InnerException != null)
                 {
-                    _logger.LOG($"Inner: {ex.Message}");
+                    _logger.LOG($"Inner: {ex.InnerException.Message}");
 
                 }
             }
