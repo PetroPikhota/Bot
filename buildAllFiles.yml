@@ -6,7 +6,7 @@ services:
       - 5432:5432  
     enviroment:
       - POSTGRES_PASSWORD: 'e10adc3949ba59abbe56e057f20f883e'
-      - POSTGRES_PASSWORD: 'postgres'
+      - POSTGRES_USER: 'postgres'
   net_bot:
     build: .
   bot:
