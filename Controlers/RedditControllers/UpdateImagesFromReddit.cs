@@ -115,17 +115,18 @@ namespace Bot_start.Controlers.RedditControllers
                 DbController dbController = new();
                 AppDbContext DB = dbController.GetDb();
                 _ = items.RemoveAll(DB.Items.ToList().Contains);
-
                 if (items.Count > 0)
                 {
                     DB.Items.AddRange(items);
-                    _ = DB.SaveChanges();
+                    int saved = DB.SaveChanges();
+                    _logger.LOG($"{nameof(UpdateImagesFromReddit)}: Aded to db {saved} new records");
                 }
             }
             catch (Exception ex)
             {
                 _logger.LOG($"{nameof(UpdateImagesFromReddit)}: {ex.Message}");
             }
+            _logger.LOG($"{nameof(UpdateImagesFromReddit)}: EOF");
         }
     }
 
