@@ -7,13 +7,13 @@ namespace Bot_start.Controlers.RedditControllers
 {
     public class UpdateImagesFromReddit
     {
-        IPrivateLogger _logger = MyLogger.GetLogger();
-        readonly string clientId;
-        readonly string clientSecret;
-        readonly string userAgent;
-        readonly string subredditName = "memes";
-        int postCount = 10;
-        List<Item> items=new List<Item>();
+        private readonly IPrivateLogger _logger = MyLogger.GetLogger();
+        private readonly string clientId;
+        private readonly string clientSecret;
+        private readonly string userAgent;
+        private readonly string subredditName = "memes";
+        private readonly int postCount = 10;
+        private readonly List<Item> items = new();
 
         public UpdateImagesFromReddit()
         {
@@ -27,14 +27,14 @@ namespace Bot_start.Controlers.RedditControllers
             bool result = true;
             try
             {
-                string accessToken = GetAccessToken(clientId, clientSecret, userAgent).Result;
+                string accessToken = GetAccessToken(clientId, clientSecret, userAgent);
 
                 List<RedditPost> posts = GetRedditPosts(subredditName, postCount, userAgent, accessToken).Result;
                 i = posts.Count;
-                DownloadAndSaveImages(posts);
-                
+                _ = DownloadAndSaveImages(posts);
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 result = false;
             }
@@ -42,111 +42,118 @@ namespace Bot_start.Controlers.RedditControllers
             return result;
         }
 
-
-        async Task<string> GetAccessToken(string clientId, string clientSecret, string userAgent)
+        private string GetAccessToken(string clientId, string clientSecret, string userAgent)
         {
             string authUrl = "https://www.reddit.com/api/v1/access_token";
-            var httpClient = new HttpClient();
+            HttpClient httpClient = new();
 
-            var authData = new FormUrlEncodedContent(new[] { new KeyValuePair<string, string>("grant_type", "client_credentials") });
+            FormUrlEncodedContent authData = new(new[] { new KeyValuePair<string, string>("grant_type", "client_credentials") });
 
             string credentials = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"));
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", credentials);
             httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
 
-            var authResponse = httpClient.PostAsync(authUrl, authData);
+            Task<HttpResponseMessage> authResponse = httpClient.PostAsync(authUrl, authData);
             string authResponseContent = authResponse.Result.Content.ReadAsStringAsync().Result;
 
-            var tokenInfo = JsonConvert.DeserializeObject<RedditTokenResponse>(authResponseContent);
+            RedditTokenResponse? tokenInfo = JsonConvert.DeserializeObject<RedditTokenResponse>(authResponseContent);
             return tokenInfo.AccessToken;
         }
-        async Task<List<RedditPost>> GetRedditPosts(string subredditName, int postCount, string userAgent, string accessToken)
+
+        private async Task<List<RedditPost>> GetRedditPosts(string subredditName, int postCount, string userAgent, string accessToken)
         {
             string apiUrl = $"https://oauth.reddit.com/r/{subredditName}/new.json?limit={postCount}";
-            var httpClient = new HttpClient();
+            HttpClient httpClient = new();
             httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
             httpClient.DefaultRequestHeaders.Add("Authorization", $"bearer {accessToken}");
 
-            var response = await httpClient.GetStringAsync(apiUrl);
-            var responseData = JsonConvert.DeserializeObject<RedditResponse>(response);
+            string response = await httpClient.GetStringAsync(apiUrl);
+            RedditResponse? responseData = JsonConvert.DeserializeObject<RedditResponse>(response);
 
             return responseData.Data.Children.ConvertAll(child => child.Data);
         }
 
-        async Task DownloadAndSaveImages(List<RedditPost> posts)
+        private async Task DownloadAndSaveImages(List<RedditPost> posts)
         {
-            foreach (var post in posts)
+            AddDataToDb();
+            foreach (RedditPost post in posts)
             {
                 if (post.Url.EndsWith(".jpg") || post.Url.EndsWith(".jpeg"))
                 {
-                    await DownloadAndSaveImage(post.Url, post.Id);
+                    await DownloadAndSaveImage(post.Url);
                     items.Add(new Item() { Path = post.Url });
                 }
-               
+
             }
-            await AddDataToDb();
         }
-        async Task DownloadAndSaveImage(string imageUrl, string postId)
+
+        private async Task DownloadAndSaveImage(string imageUrl)
         {
-            using (HttpClient httpClient = new HttpClient())
+            _logger.LOG($"Start {nameof(DownloadAndSaveImage)}");
+            try
             {
+                using HttpClient httpClient = new();
                 byte[] imageBytes = await httpClient.GetByteArrayAsync(imageUrl);
 
-                Regex regex = new Regex("([a-zA-Z0-9]+)\\.(jpeg|jpg)(?=$|\\?)");
+                Regex regex = new("([a-zA-Z0-9]+)\\.(jpeg|jpg)(?=$|\\?)");
                 string shorFileName = regex.Match(imageUrl).Value.Split('.')[0];
                 string fileName = $"images/{shorFileName}.jpg";
                 File.WriteAllBytes(fileName, imageBytes);
-                _logger.LOG($"Saved: {imageUrl}");              
+                _logger.LOG($"Saved: {imageUrl}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LOG($"{nameof(DownloadAndSaveImage)}: {ex.Message}");
             }
         }
 
-        async Task AddDataToDb()
+        private void AddDataToDb()
         {
             _logger.LOG("Start AddDataToDb");
             try
             {
-                DbController dbController = new DbController();
-                var DB = dbController.GetDb();
-                items.RemoveAll(DB.Items.ToList().Contains);
+                DbController dbController = new();
+                AppDbContext DB = dbController.GetDb();
+                _ = items.RemoveAll(DB.Items.ToList().Contains);
 
                 if (items.Count > 0)
                 {
                     DB.Items.AddRange(items);
-                    DB.SaveChanges();
+                    _ = DB.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LOG($"{nameof(UpdateImagesFromReddit)}: {ex.Message}");
             }
         }
     }
 
-    class RedditTokenResponse
+    internal class RedditTokenResponse
     {
         [JsonProperty("access_token")]
-        public string AccessToken { get; set; }
+        public required string AccessToken { get; set; }
     }
 
-    class RedditResponse
+    internal class RedditResponse
     {
-        public RedditData Data { get; set; }
+        public required RedditData Data { get; set; }
     }
 
-    class RedditData
+    internal class RedditData
     {
-        public List<RedditPostData> Children { get; set; }
+        public required List<RedditPostData> Children { get; set; }
     }
 
-    class RedditPostData
+    internal class RedditPostData
     {
-        public RedditPost Data { get; set; }
+        public required RedditPost Data { get; set; }
     }
 
-    class RedditPost
+    internal class RedditPost
     {
-        public string Title { get; set; }
-        public string Url { get; set; }
-        public string Id { get; set; }
+        public required string Title { get; set; }
+        public required string Url { get; set; }
+        public required string Id { get; set; }
     }
 }
