@@ -76,7 +76,7 @@ namespace Bot_start.Controlers.RedditControllers
 
         private async Task DownloadAndSaveImages(List<RedditPost> posts)
         {
-            AddDataToDb();
+            
             foreach (RedditPost post in posts)
             {
                 if (post.Url.EndsWith(".jpg") || post.Url.EndsWith(".jpeg"))
@@ -86,6 +86,7 @@ namespace Bot_start.Controlers.RedditControllers
                 }
 
             }
+            AddDataToDb();
         }
 
         private async Task DownloadAndSaveImage(string imageUrl)
