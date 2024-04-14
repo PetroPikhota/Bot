@@ -2,8 +2,6 @@ version: '3.9'
 services:
   net_bot:
     build: .
-  bot:
-    image: net_bot
     ports:
       - 80:80
   
