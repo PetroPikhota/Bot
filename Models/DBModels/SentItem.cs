@@ -11,7 +11,7 @@ namespace Bot_start.Models
         public string ItemName { get; set; }
         public SentItem()
         {
-            lastUpdate = DateTime.Now;
+            lastUpdate = DateTime.UtcNow;
         }
     }
 }

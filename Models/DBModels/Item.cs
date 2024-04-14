@@ -14,7 +14,7 @@ namespace Bot_start.Models
         }
         public Item()
         {
-            lastUpdate = DateTime.Now;
+            lastUpdate = DateTime.UtcNow;
         }
     }
 }
