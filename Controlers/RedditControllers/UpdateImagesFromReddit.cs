@@ -30,9 +30,9 @@ namespace Bot_start.Controlers.RedditControllers
                 _logger.LOG($"Start {nameof(UpdateImages)} Class");
                 string accessToken = GetAccessToken(clientId, clientSecret, userAgent);
                 _logger.LOG($"{nameof(UpdateImages)} After GetAccessToken");
-                List<RedditPost> posts = GetRedditPosts(subredditName, postCount, userAgent, accessToken).Result;
-                i = posts.Count;
+                List<RedditPost> posts = GetRedditPosts(subredditName, postCount, userAgent, accessToken).Result;              
                 _ = DownloadAndSaveImages(posts);
+                i = posts.Count;
 
             }
             catch (Exception)
@@ -129,6 +129,11 @@ namespace Bot_start.Controlers.RedditControllers
             catch (Exception ex)
             {
                 _logger.LOG($"{nameof(UpdateImagesFromReddit)}: {ex.Message}");
+                if(ex.InnerException != null)
+                {
+                    _logger.LOG($"Inner: {ex.Message}");
+
+                }
             }
             _logger.LOG($"{nameof(UpdateImagesFromReddit)}: EOF");
         }
