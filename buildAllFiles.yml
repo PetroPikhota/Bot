@@ -12,4 +12,4 @@ services:
     ports:
       - 80:80
     volumes:
-      - /home/petryk/Desktop/NET/Bot/Log:./app/Log
+      - /home/petryk/Desktop/NET/Bot/Log:/app/Log
