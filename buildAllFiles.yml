@@ -11,10 +11,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      labels:
+      tag:
         - "First"
-      args:
-        - BUILD_DATE=${BUILD_DATE}
     depends_on:
       - postgres-container
     ports:
