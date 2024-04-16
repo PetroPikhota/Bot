@@ -8,7 +8,13 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=e10adc3949ba59abbe56e057f20f883e   
   net_bot:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BUILD_DATE=${BUILD_DATE}
+    depends_on:
+      - postgres-container
     ports:
       - 80:80
     volumes:
