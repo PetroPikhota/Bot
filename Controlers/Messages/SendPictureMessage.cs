@@ -7,11 +7,15 @@ namespace Bot_start.Controlers.Messages
 {
     public class SendPictureMessage : IMessage
     {
-        private readonly IPrivateLogger _logger = MyLogger.GetLogger();
+        private readonly IPrivateLogger _logger;
         private readonly string _message = "/givememem";
         public string getMessage()
         {
             return _message;
+        }
+        public SendPictureMessage(IPrivateLogger _privateLogger)
+        {
+            _logger = _privateLogger;
         }
 
         private readonly AppDbContext dbController = new DbController().GetDb();

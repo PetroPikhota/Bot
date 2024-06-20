@@ -3,7 +3,7 @@ services:
   postgres-container:
     image: arm32v7/postgres
     ports:
-      - 5432:5432  
+      - 5432:01
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=e10adc3949ba59abbe56e057f20f883e   

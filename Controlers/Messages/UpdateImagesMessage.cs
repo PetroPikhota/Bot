@@ -8,14 +8,18 @@ namespace Bot_start.Controlers.Messages
     public class UpdateImagesMessage : IMessage
     {
         private string _message = "/update";
+        private readonly IPrivateLogger privateLogger;
         public string getMessage()
         {
             return _message;
         }
-
+        public UpdateImagesMessage(IPrivateLogger _privateLogger)
+        {
+            privateLogger = _privateLogger;     
+        }
         public async Task PerformAction(ITelegramBotClient botClient, Update update)
         {
-            UpdateImagesFromReddit updateImages = new UpdateImagesFromReddit();
+            UpdateImagesFromReddit updateImages = new UpdateImagesFromReddit(privateLogger);
             int i = -1;
             if (updateImages.UpdateImages(ref i))
             {

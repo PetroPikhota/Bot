@@ -2,12 +2,13 @@
 using Bot_start.Models;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Bot_start.Controlers.RedditControllers
 {
     public class UpdateImagesFromReddit
     {
-        private readonly IPrivateLogger _logger = MyLogger.GetLogger();
+        private readonly IPrivateLogger _logger;// = ServiceProvider.
         private readonly string clientId;
         private readonly string clientSecret;
         private readonly string userAgent;
@@ -15,8 +16,9 @@ namespace Bot_start.Controlers.RedditControllers
         private readonly int postCount = 10;
         private readonly List<Item> items = new();
 
-        public UpdateImagesFromReddit()
+        public UpdateImagesFromReddit(IPrivateLogger privateLogger)
         {
+            _logger = privateLogger;
             clientId = LoginParameters.GetReddit().clientID;
             clientSecret = LoginParameters.GetReddit().clientSecret;
             userAgent = LoginParameters.GetReddit().userAgent;

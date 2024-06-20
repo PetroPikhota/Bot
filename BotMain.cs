@@ -5,23 +5,29 @@ using Telegram.Bot;
 using Bot_start.Interface;
 using Bot_start.Controlers;
 using Bot_start.Controlers.Messages;
+using Bot_start.Models;
 
 namespace Bot_start
 {
 
     public class BotMain
     {
-        readonly IPrivateLogger _logger = MyLogger.GetLogger();
+        private static LogOptions _logOptions;
+        readonly IPrivateLogger _logger; 
         private static TelegramBotClient botClient;
         private List<IMessage> messages;
         public BotMain()
         {
+            
+            _logOptions = LoginParameters.GetLogOptions();
+            _logger = new MyLogger(_logOptions);
             botClient = new TelegramBotClient(LoginParameters.GetTelegram().botToken);
             messages = new List<IMessage>
             {
-                new HelloMessage(),
-                new UpdateImagesMessage(),
-                new SendPictureMessage()
+                new HelloMessage(_logger),
+                new UpdateImagesMessage(_logger),
+                new SendPictureMessage(_logger),
+                new CheckState(_logger)
             };
         }
         public async Task StartReceiver()

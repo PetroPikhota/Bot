@@ -1,5 +1,7 @@
 using Bot_start;
 using Bot_start.Controlers;
+using Bot_start.Interface;
+using Microsoft.Extensions.DependencyInjection;
 
 class Program
 {
@@ -19,4 +21,5 @@ class Program
 
         DbController _db = new DbController();
     }
+
 }

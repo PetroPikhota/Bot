@@ -1,40 +1,40 @@
 ﻿using Bot_start.Interface;
-using System.Globalization;
 
 namespace Bot_start.Controlers
 {
-    public class FileLogger : IPrivateLogger
+    public class FileLogger : BasicLogClass, IPrivateLogger
     {
         private static readonly string logDir = "./Log/";
         private static readonly string basicLogFile = "basicLog.log";
-        private static readonly string messageLogFile = "commands.log";
-        private BasicLogData _LogData;
+
+        public FileLogger()
+        {
+            if (!Directory.Exists("./Log"))
+            {
+                _ = Directory.CreateDirectory("./Log");
+            }
+        }
         public void LOG(string message)
         {
-            _LogData = createBasicData(basicLogFile);
-            string messageText = $"{_LogData.time}| {message}\n";
-            File.AppendAllText(_LogData.path, messageText);
+            string messageText = $"{createMessage(message)}\n";
+            File.AppendAllText(fullPath(basicLogFile), messageText);
         }
 
         public void LOG(string functionName, string message)
         {
-            _LogData = createBasicData(basicLogFile);
-            string messageText = $"{_LogData.time}| {functionName}: {message}\n";
-            File.AppendAllText(_LogData.path, messageText);
+            string messageText = $"{createMessage(message, functionName)}\n";
+            File.AppendAllText(fullPath(basicLogFile), messageText);
         }
 
         public void LOG_Message(string message)
         {
-            _LogData = createBasicData(messageLogFile);
-            string messageText = $"{_LogData.time}| {message}\n";
-            File.AppendAllText(_LogData.path, messageText);
+            string messageText = $"{createMessage(message)}\n";
+            File.AppendAllText(fullPath(basicLogFile), messageText);
         }
 
-        private BasicLogData createBasicData(string file)
+        private string fullPath(string file)
         {
-            return new BasicLogData(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture), $"{logDir}{file}");
+            return $"{logDir}{file}";
         }
-
-        private record BasicLogData(string time, string path);
     }
 }
