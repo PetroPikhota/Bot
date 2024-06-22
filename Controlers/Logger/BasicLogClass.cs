@@ -11,7 +11,7 @@ namespace Bot_start.Controlers
             stringBuilder.Append($"{DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}| ");
             stringBuilder.Append(String.IsNullOrWhiteSpace(funcName) ? "" : $"{funcName}: ");
             stringBuilder.Append(message);
-            return $"{DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff", CultureInfo.InvariantCulture)}| {funcName ?? ""}";
+            return stringBuilder.ToString();
         }
     }
 }

@@ -29,6 +29,7 @@ namespace Bot_start
                 new SendPictureMessage(_logger),
                 new CheckState(_logger)
             };
+            messages.Add(new ListOfMessage(_logger, new List<string>(messages.Select(x => x.getMessage()))));
         }
         public async Task StartReceiver()
         {
