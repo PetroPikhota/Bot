@@ -6,10 +6,10 @@ namespace Bot_start.Controlers
 {
     public class ListOfMessage : IMessage
     {
-        private string funcName = nameof(ListOfMessage);
+        private readonly string funcName = nameof(ListOfMessage);
         private const string _message = "/list";
         private readonly IPrivateLogger privateLogger;
-        private List<string> messagelist;
+        private readonly List<string> messagelist;
         public ListOfMessage(IPrivateLogger _privateLogger, List<string> _messagelist)
         {
             privateLogger = _privateLogger;
